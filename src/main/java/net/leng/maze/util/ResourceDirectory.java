@@ -37,6 +37,5 @@ public class ResourceDirectory {
     public static final BufferedImage IDK_IMAGE = getImage("idk_image");
 
     public static final BufferedImage LOGO = getImage("logo");
-    public static final BufferedImage TEXT_LOGO = getImage("text_logo");
     public static final BufferedImage FAVICON = getImage("favicon");
 }

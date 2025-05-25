@@ -48,8 +48,6 @@ public class StartScreen extends JPanel {
         boolean shortHeight = height < width;
         int added = (Math.max(height, width) - interval) / 2;
         g.drawImage(ResourceDirectory.LOGO, (shortHeight ? added : 0), (shortHeight ? 0 : added), interval, interval, null);
-
-        g.drawImage(ResourceDirectory.TEXT_LOGO, 20 + (getWidth() - 860) / 2, 10, 860, 122, null);
     }
 
     @Override
