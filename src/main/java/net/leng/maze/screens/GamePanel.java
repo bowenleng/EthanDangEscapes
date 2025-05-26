@@ -6,7 +6,6 @@ import net.leng.maze.util.ResourceDirectory;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.function.BooleanSupplier;
@@ -287,7 +286,18 @@ public class GamePanel extends JPanel {
                 }
                 if (!SettingPanel.FAST_FORWARD && isRunning) {
                     g.setColor(activeColor);
-                    g.drawString("Generating maze...", maxW - 180, getHeight() - 70);
+                    g.drawString("Generating maze...", maxW - 160, getHeight() - 70);
+                } else {
+                    String diff = "Difficulty: " + switch (SettingPanel.getDifficulty()) {
+                        case 0 -> "Effortless";
+                        case 1 -> "Easy";
+                        case 2 -> "Medium";
+                        case 3 -> "Hard";
+                        case 4 -> "XTREME";
+                        default -> SettingPanel.getDifficulty() + "";
+                    };
+                    g.setColor(Color.WHITE);
+                    g.drawString(diff, maxW - getStringWidth(g, diff, font), getHeight() - 70);
                 }
             }
         }

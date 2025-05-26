@@ -105,7 +105,7 @@ public class MazePlayer {
         int x1 = interval * x + (shortHeight ? added : 0) + 1;
         int y1 = interval * y + (shortHeight ? 0 : added) + 1;
 
-        BufferedImage playerImage = generatePlayerImage();
+        Image playerImage = generatePlayerImage();
         if (playerImage != null) {
             g.drawImage(playerImage, x1, y1, interval-2, interval-2, null);
         } else {
@@ -115,7 +115,7 @@ public class MazePlayer {
         }
     }
 
-    private BufferedImage generatePlayerImage() {
+    private Image generatePlayerImage() {
         if (hasWon) {
             return ResourceDirectory.ETHAN_WON;
         } else if (healthLevel < 0) {

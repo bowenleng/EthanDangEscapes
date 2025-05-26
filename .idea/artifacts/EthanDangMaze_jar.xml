@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="EthanDangMaze:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/EthanDangMaze_jar</output-path>
+    <root id="archive" name="EthanDangMaze.jar">
+      <element id="module-output" name="EthanDangMaze" />
+    </root>
+  </artifact>
+</component>

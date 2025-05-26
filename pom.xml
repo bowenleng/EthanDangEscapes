@@ -7,7 +7,6 @@
     <groupId>net.leng.maze</groupId>
     <artifactId>EthanDangMaze</artifactId>
     <version>1.0-BETA</version>
-    <packaging>jar</packaging>
 
     <properties>
         <maven.compiler.source>21</maven.compiler.source>

@@ -1,9 +1,11 @@
 package net.leng.maze.screens;
 
+import net.leng.maze.EthanDangMaze;
 import net.leng.maze.util.ResourceDirectory;
 
 import javax.swing.*;
 import java.awt.*;
+import java.net.URL;
 
 public class StartScreen extends JPanel {
     private final JButton createButton;
@@ -47,7 +49,10 @@ public class StartScreen extends JPanel {
         int interval = Math.min(width, height);
         boolean shortHeight = height < width;
         int added = (Math.max(height, width) - interval) / 2;
-        g.drawImage(ResourceDirectory.LOGO, (shortHeight ? added : 0), (shortHeight ? 0 : added), interval, interval, null);
+        if (ResourceDirectory.LOGO != null) g.drawImage(ResourceDirectory.LOGO, (shortHeight ? added : 0), (shortHeight ? 0 : added), interval, interval, null);
+        else {
+            g.drawString("The game failed to generate any assets", 0, 50);
+        }
     }
 
     @Override
