@@ -10,13 +10,13 @@ import java.io.*;
 import java.util.Scanner;
 
 public class ResourceDirectory {
-    public static char UP_KEY = KeyEvent.VK_W;
-    public static char DOWN_KEY = KeyEvent.VK_S;
-    public static char LEFT_KEY = KeyEvent.VK_A;
-    public static char RIGHT_KEY = KeyEvent.VK_D;
-    public static char COLLECT_KEY = KeyEvent.VK_X;
+    public static char UP_KEY = 'w';
+    public static char DOWN_KEY = 's';
+    public static char LEFT_KEY = 'a';
+    public static char RIGHT_KEY = 'd';
+    public static char COLLECT_KEY = 'x';
 
-    private static File SETTINGS = new File("settings.dat");
+    private static final File SETTINGS = new File("settings.dat");
 
     public static Image getImage(String name) {
         try {

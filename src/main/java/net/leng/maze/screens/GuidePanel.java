@@ -4,11 +4,29 @@ import net.leng.maze.util.ResourceDirectory;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 
 public class GuidePanel extends JPanel {
     GuidePanel(Screen frame) {
         setBackground(Color.BLACK);
         add(Screen.makeButton("Go Back", l -> frame.openScreen(Screen.START)));
+
+        addKeyListener(new KeyListener() {
+            @Override
+            public void keyTyped(KeyEvent e) {
+            }
+
+            @Override
+            public void keyPressed(KeyEvent e) {
+
+            }
+
+            @Override
+            public void keyReleased(KeyEvent e) {
+                if (e.getKeyCode() == KeyEvent.VK_ESCAPE) frame.openScreen(Screen.START);
+            }
+        });
     }
 
     @Override
@@ -46,7 +64,7 @@ public class GuidePanel extends JPanel {
                 + ResourceDirectory.keycodeToName(ResourceDirectory.DOWN_KEY) + " for down, and "
                 + ResourceDirectory.keycodeToName(ResourceDirectory.RIGHT_KEY) + " for right.", beforeSpace, 450);
         g.drawString("To enable collection or disable it, press " + ResourceDirectory.COLLECT_KEY + ".", beforeSpace, 475);
-        g.drawString("Note that anytime you turn off collection mode, you consume points in the medium or harder difficulties.", beforeSpace, 500);
+        g.drawString("Disabling collection also requires you to have points if you're playing the medium/harder difficulties.", beforeSpace, 500);
 
         g.drawString("Maze Types:", beforeSpace, 550);
         g.drawString("Easy Mazes to Solve: DFS and Binary Tree", beforeSpace, 575);
@@ -58,5 +76,8 @@ public class GuidePanel extends JPanel {
         g.drawString("Author:", beforeSpace, 725);
         g.drawString("Code written, art designed, and premise written by Bowen Leng.", beforeSpace, 750);
         g.drawString("To Ethan on his birthday!", beforeSpace, 775);
+
+        requestFocus();
+        requestFocusInWindow();
     }
 }

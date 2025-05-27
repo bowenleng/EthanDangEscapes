@@ -15,7 +15,11 @@ public class GamePanel extends JPanel {
     static MazeMaker MAKER;
     static long startTime;
     static long endTime;
-    GamePanel() {
+    static boolean NO_MAZE = true;
+    public static boolean AUTO_SOLVE = false;
+
+    private boolean canFocus;
+    GamePanel(Screen frame) {
         setBackground(Color.BLACK);
         setPreferredSize(new Dimension(720, 720));
         MAKER = new MazeMaker(5);
@@ -24,7 +28,7 @@ public class GamePanel extends JPanel {
             boolean typed = false;
             @Override
             public void keyTyped(KeyEvent e) {
-                if (!Screen.NO_MAZE && !PLAYER.hasWon()) {
+                if (!NO_MAZE && !PLAYER.hasWon()) {
                     PLAYER.action(Character.toLowerCase(e.getKeyChar()));
                     if (PLAYER.hasWon()) {
                         endTime = System.currentTimeMillis();
@@ -39,10 +43,12 @@ public class GamePanel extends JPanel {
 
             @Override
             public void keyReleased(KeyEvent e) {
+                if (PLAYER.hasWon() && e.getKeyCode() == KeyEvent.VK_ESCAPE) frame.openScreen(Screen.OPTIONS);
+
                 if (typed) {
                     typed = false;
                 } else {
-                    if (!Screen.NO_MAZE && !PLAYER.hasWon()) {
+                    if (!NO_MAZE && !PLAYER.hasWon()) {
                         PLAYER.action((char)e.getKeyCode());
                         if (PLAYER.hasWon()) {
                             endTime = System.currentTimeMillis();
@@ -83,6 +89,7 @@ public class GamePanel extends JPanel {
             g.setColor(BottomPanel.activeColor);
             String playerStat = "YOU WON!";
             g.drawString(playerStat, (shortHeight ? added : 0) + (interval - getStringWidth(g, playerStat, font))/2, 100);
+            canFocus = false;
         } else if (PLAYER.hasLost()) {
             g.drawImage(ResourceDirectory.ETHAN_LOST, (shortHeight ? added : 0), (shortHeight ? 0 : added), interval, interval, null);
             g.setColor(BottomPanel.badColor);
@@ -100,11 +107,11 @@ public class GamePanel extends JPanel {
                 runMaze(OptionPanel.option, () -> MAKER.prims());
             } else if (OptionPanel.option == 4) {
                 runMaze(OptionPanel.option, () -> MAKER.binaryTree());
-            } else if (Screen.AUTO_SOLVE && !PLAYER.hasWon() && !PLAYER.hasLost()) {
+            } else if (AUTO_SOLVE && !PLAYER.hasWon() && !PLAYER.hasLost()) {
                 PLAYER.autoMove();
                 PLAYER.drawPlayer(g, getWidth(), getHeight());
-            } else if (!Screen.NO_MAZE) {
-                if (Screen.CAN_FOCUS) focus();
+            } else if (!NO_MAZE) {
+                if (canFocus) focus();
                 PLAYER.drawPlayer(g, getWidth(), getHeight());
             }
         }
@@ -128,17 +135,21 @@ public class GamePanel extends JPanel {
                 stopped = sup.getAsBoolean();
             }
             OptionPanel.option = 0;
-            Screen.NO_MAZE = false;
-            Screen.CAN_FOCUS = true;
+            NO_MAZE = false;
+            canFocus = true;
             MAKER.generateItems();
             startTime = System.currentTimeMillis();
         } else if (sup.getAsBoolean()) {
             OptionPanel.option = 0;
-            Screen.NO_MAZE = false;
-            Screen.CAN_FOCUS = true;
+            NO_MAZE = false;
+            canFocus = true;
             MAKER.generateItems();
             startTime = System.currentTimeMillis();
         }
+    }
+
+    public static boolean hasNoMaze() {
+        return NO_MAZE;
     }
 
     static class BottomPanel extends JPanel {
@@ -155,7 +166,7 @@ public class GamePanel extends JPanel {
         private boolean noChangeButton;
 
         public static final JButton SOLVER = Screen.makeButton("Solve", l -> {
-            if (!Screen.NO_MAZE) Screen.AUTO_SOLVE = true;
+            if (!NO_MAZE) AUTO_SOLVE = true;
         });
 
         BottomPanel(Screen frame) {
@@ -194,8 +205,8 @@ public class GamePanel extends JPanel {
                 PLAYER.resetLoc();
                 PLAYER.resetHealth();
                 OptionPanel.mostRecentOption = 0;
-                Screen.NO_MAZE = true;
-                Screen.AUTO_SOLVE = false;
+                NO_MAZE = true;
+                AUTO_SOLVE = false;
                 if (noChangeButton) {
                     add(changeButon);
                     noChangeButton = false;
@@ -243,7 +254,7 @@ public class GamePanel extends JPanel {
                 noChangeButton = true;
             } else if (!PLAYER.hasLost()) {
                 //draws player hearts
-                if (!Screen.NO_MAZE) {
+                if (!NO_MAZE) {
                     float health = PLAYER.getHealth() / 2f;
                     for (int i = 0; i < health; i++) {
                         g.drawImage(i + 1 > health ? ResourceDirectory.HALF_HEART : ResourceDirectory.HEART, 10 + (20 * i), 10, 18, 18, null);
@@ -265,7 +276,7 @@ public class GamePanel extends JPanel {
                 g.drawString(mazeGen, maxW - getStringWidth(g, mazeGen, font), getHeight() - 40);
                 String sizeStr = "Size: " + val + "x" + val;
                 g.drawString(sizeStr, maxW - getStringWidth(g, sizeStr, font), getHeight() - 10);
-                if (!Screen.NO_MAZE) {
+                if (!NO_MAZE) {
                     String locStr = "Location: (" + PLAYER.getX() + ", " + PLAYER.getY() + ")";
                     g.drawString(locStr, 10, getHeight() - 10);
 

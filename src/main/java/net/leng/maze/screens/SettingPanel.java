@@ -21,10 +21,9 @@ public class SettingPanel extends JPanel {
         setBackground(Color.BLACK);
 
         // this allows user to change keybinds and whether the maze generation animates
-        JCheckBox checkBox = new JCheckBox("Don't Animate Generation");
+        JCheckBox checkBox = new JCheckBox("Don't Animate Generation", null, FAST_FORWARD);
         checkBox.setBackground(new Color(215, 245, 255));
         checkBox.addActionListener(l -> FAST_FORWARD = !FAST_FORWARD);
-        if (FAST_FORWARD) checkBox.setSelected(true);
         add(checkBox);
 
         add(Screen.makeButton("Go Back", l -> frame.openScreen(Screen.START)));
@@ -92,6 +91,8 @@ public class SettingPanel extends JPanel {
 
             @Override
             public void keyReleased(KeyEvent e) {
+                if (e.getKeyCode() == KeyEvent.VK_ESCAPE) frame.openScreen(Screen.START);
+
                 if (typed) {
                     typed = false;
                 } else {

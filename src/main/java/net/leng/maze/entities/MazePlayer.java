@@ -1,10 +1,10 @@
 package net.leng.maze.entities;
 
+import net.leng.maze.screens.GamePanel;
 import net.leng.maze.screens.SettingPanel;
 import net.leng.maze.util.ResourceDirectory;
 import net.leng.maze.util.Logger;
 import net.leng.maze.util.MazeMaker;
-import net.leng.maze.screens.Screen;
 
 import java.awt.*;
 
@@ -122,7 +122,7 @@ public class MazePlayer {
     }
 
     public void action(char ch) {
-        if (!Screen.hasNoMaze() && !hasWon && healthLevel >= 0) {
+        if (!GamePanel.hasNoMaze() && !hasWon && healthLevel >= 0) {
             justConsumed = 0;
             if (ch == ResourceDirectory.UP_KEY) moveUp();
             else if (ch == ResourceDirectory.LEFT_KEY) moveLeft();
@@ -131,8 +131,9 @@ public class MazePlayer {
             else if (ch == ResourceDirectory.COLLECT_KEY) {
                 int difficulty = SettingPanel.DIFFICULTY;
                 boolean orgCollecting = isCollecting;
-                if (difficulty < 2 || !isCollecting || points > 0)
+                if (difficulty < 2 || !isCollecting || points > 0) {
                     isCollecting = !isCollecting;
+                }
                 if (points > 0 && orgCollecting) {
                     if (difficulty == 2) points--;
                     else if (difficulty > 2) points -= 2;
@@ -165,7 +166,7 @@ public class MazePlayer {
         int nId = mazeMaker.getNextPathId();
         if (nId < 0) {
             Logger.log("The maze solver has encountered an error");
-            Screen.AUTO_SOLVE = false;
+            GamePanel.AUTO_SOLVE = false;
         } else {
             if (mazeMaker.hasGoodStory(x, y)) {
                 isCollecting = true;
@@ -190,7 +191,7 @@ public class MazePlayer {
             y = ny;
 
             if (x == mazeMaker.getSize() - 1 && y == mazeMaker.getSize() - 1) {
-                Screen.AUTO_SOLVE = false;
+                GamePanel.AUTO_SOLVE = false;
                 hasWon = true;
             }
         }
@@ -216,9 +217,5 @@ public class MazePlayer {
         facing = MazeMaker.DOWN;
         hasWon = false;
         isCollecting = true;
-    }
-
-    public boolean finishedMaze() {
-        return x == mazeMaker.getSize() - 1 && y == mazeMaker.getSize() - 1;
     }
 }

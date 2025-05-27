@@ -16,10 +16,6 @@ public class Screen extends JFrame {
     public static final int GAME = 3;
     public static final int GUIDE = 4;
 
-    static boolean NO_MAZE = true;
-    static boolean CAN_FOCUS = false;
-    public static boolean AUTO_SOLVE = false;
-
     private final JPanel drawer;
     private final JPanel starter;
     private final GamePanel.BottomPanel bottomBar;
@@ -33,7 +29,8 @@ public class Screen extends JFrame {
         setVisible(true);
 
         if (ResourceDirectory.FAVICON != null) setIconImage(ResourceDirectory.FAVICON);
-        drawer = new GamePanel();
+        ResourceDirectory.loadSettings();
+        drawer = new GamePanel(this);
         starter = new StartScreen(this);
         bottomBar = new GamePanel.BottomPanel(this);
         settingScreen = new SettingPanel(this);
@@ -45,10 +42,8 @@ public class Screen extends JFrame {
             for (Component c : getContentPane().getComponents()) {
                 c.repaint();
             }
-            if (GamePanel.PLAYER.finishedMaze()) CAN_FOCUS = false;
         });
         timer.start();
-        ResourceDirectory.loadSettings();
     }
 
     @Override
@@ -92,10 +87,6 @@ public class Screen extends JFrame {
         if (getContentPane().getComponent(0) instanceof GamePanel drawing) {
             drawing.repaint();
         }
-    }
-
-    public static boolean hasNoMaze() {
-        return NO_MAZE;
     }
 
     public static void drawIdkImage(Graphics g, int width, int height) {

@@ -3,7 +3,11 @@ package net.leng.maze.screens;
 import net.leng.maze.util.MazeMaker;
 
 import javax.swing.*;
+import javax.swing.event.PopupMenuEvent;
+import javax.swing.event.PopupMenuListener;
 import java.awt.*;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 
 public class OptionPanel extends JPanel {
     static int option = 0;
@@ -14,10 +18,28 @@ public class OptionPanel extends JPanel {
     // 4 is bin tree
     static int mostRecentOption = 0;
     static final JSlider slider = makeSlider();
+
+    private boolean canFocus = true;
     OptionPanel(Screen frame) {
         setBackground(Color.BLACK);
         // algorithms
         JComboBox<String> box = Screen.createComboBox(new String[]{"<Select Maze Type>", "DFS", "Kruskal's", "Prim's", "Binary Tree"});
+        box.addPopupMenuListener(new PopupMenuListener() {
+            @Override
+            public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
+                canFocus = false;
+            }
+
+            @Override
+            public void popupMenuWillBecomeInvisible(PopupMenuEvent e) {
+                canFocus = true;
+            }
+
+            @Override
+            public void popupMenuCanceled(PopupMenuEvent e) {
+                canFocus = true;
+            }
+        });
         box.addActionListener(l -> {
             reset();
             mostRecentOption = box.getSelectedIndex();
@@ -43,6 +65,22 @@ public class OptionPanel extends JPanel {
         add(Screen.makeButton("Go Back", l -> {
             frame.openScreen(Screen.START);
         }));
+
+        addKeyListener(new KeyListener() {
+            @Override
+            public void keyTyped(KeyEvent e) {
+            }
+
+            @Override
+            public void keyPressed(KeyEvent e) {
+
+            }
+
+            @Override
+            public void keyReleased(KeyEvent e) {
+                if (e.getKeyCode() == KeyEvent.VK_ESCAPE) frame.openScreen(Screen.START);
+            }
+        });
     }
 
     private void reset() {
@@ -99,5 +137,10 @@ public class OptionPanel extends JPanel {
         };
         g.drawString("Maze Size: " + sliderVal + "x" + sliderVal, (shortHeight ? added : 0), getHeight() - 180);
         g.drawString("Maze Type: " + mazeType, (shortHeight ? added : 0), getHeight() - 150);
+
+        if (canFocus) {
+            requestFocus();
+            requestFocusInWindow();
+        }
     }
 }

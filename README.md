@@ -27,7 +27,7 @@ You have a limited number of hearts
 Movement is done via the wasd keys, w for up, a for left, s for down, and d for right.
 
 To enable collection or disable it, press x.
-- Note that anytime you turn off collection mode, you consume points in the medium or harder difficulties.
+- Disabling collection also requires you to have points if you're playing the medium/harder difficulties.
 
 ## Maze Types ##
 Easy Mazes to Solve: DFS and Binary Tree
