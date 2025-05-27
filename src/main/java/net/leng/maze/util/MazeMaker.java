@@ -233,13 +233,6 @@ public class MazeMaker {
         return size;
     }
 
-    public void copyColor(MazeMaker maker) {
-        leftUp = maker.leftUp;
-        leftDown = maker.leftDown;
-        rightUp = maker.rightUp;
-        rightDown = maker.rightDown;
-    }
-
     private void restartUf() {
         if (uf != null) {
             if (uf.size() != sizeSq) {

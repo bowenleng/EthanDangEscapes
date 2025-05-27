@@ -1,11 +1,9 @@
 package net.leng.maze.screens;
 
-import net.leng.maze.EthanDangMaze;
 import net.leng.maze.util.ResourceDirectory;
 
 import javax.swing.*;
 import java.awt.*;
-import java.net.URL;
 
 public class StartScreen extends JPanel {
     private final JButton createButton;
@@ -20,7 +18,10 @@ public class StartScreen extends JPanel {
         createButton = makeButton("Create Maze", Screen.OPTIONS, frame);
         guideButton = makeButton("Guide", Screen.GUIDE, frame);
         settingButton = makeButton("Settings", Screen.SETTINGS, frame);
-        exitButton = Screen.makeButton("Exit Game", l -> System.exit(0));
+        exitButton = Screen.makeButton("Exit Game", l -> {
+            frame.dispose();
+            System.exit(0);
+        });
 
         exitButton.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 20));
 

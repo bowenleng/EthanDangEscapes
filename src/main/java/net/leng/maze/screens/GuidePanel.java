@@ -40,8 +40,12 @@ public class GuidePanel extends JPanel {
         g.drawString("is cheese. Ethan hates cheese with a burning passion. Do NOT collect them, he will puke and lose hearts.", beforeSpace + 25, 375);
 
         g.drawString("Available Keys:", beforeSpace, 425);
-        g.drawString("Movement is done via the wasd keys, w for up, a for left, s for down, and d for right.", beforeSpace, 450);
-        g.drawString("To enable collection or disable it, press x.", beforeSpace, 475);
+        g.drawString("Movement is done via the following keys: "
+                + ResourceDirectory.keycodeToName(ResourceDirectory.UP_KEY) + " for up, "
+                + ResourceDirectory.keycodeToName(ResourceDirectory.LEFT_KEY) + " for left, "
+                + ResourceDirectory.keycodeToName(ResourceDirectory.DOWN_KEY) + " for down, and "
+                + ResourceDirectory.keycodeToName(ResourceDirectory.RIGHT_KEY) + " for right.", beforeSpace, 450);
+        g.drawString("To enable collection or disable it, press " + ResourceDirectory.COLLECT_KEY + ".", beforeSpace, 475);
         g.drawString("Note that anytime you turn off collection mode, you consume points in the medium or harder difficulties.", beforeSpace, 500);
 
         g.drawString("Maze Types:", beforeSpace, 550);

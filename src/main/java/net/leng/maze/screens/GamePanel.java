@@ -21,14 +21,16 @@ public class GamePanel extends JPanel {
         MAKER = new MazeMaker(5);
         PLAYER = new MazePlayer(MAKER);
         addKeyListener(new KeyListener() {
+            boolean typed = false;
             @Override
             public void keyTyped(KeyEvent e) {
                 if (!Screen.NO_MAZE && !PLAYER.hasWon()) {
-                    PLAYER.action(e.getKeyChar());
+                    PLAYER.action(Character.toLowerCase(e.getKeyChar()));
                     if (PLAYER.hasWon()) {
                         endTime = System.currentTimeMillis();
                     }
                 }
+                typed = true;
             }
 
             @Override
@@ -37,25 +39,23 @@ public class GamePanel extends JPanel {
 
             @Override
             public void keyReleased(KeyEvent e) {
-
+                if (typed) {
+                    typed = false;
+                } else {
+                    if (!Screen.NO_MAZE && !PLAYER.hasWon()) {
+                        PLAYER.action((char)e.getKeyCode());
+                        if (PLAYER.hasWon()) {
+                            endTime = System.currentTimeMillis();
+                        }
+                    }
+                }
             }
         });
-        PLAYER.setHealth(14 - (2 * SettingPanel.getDifficulty()));
+        PLAYER.setHealth(14 - (2 * SettingPanel.DIFFICULTY));
     }
 
     public void regenColor() {
         MAKER.regenerateColor();
-    }
-
-    public void redrawMatrix(int size) {
-        if (MAKER.getSize() == size) {
-            MAKER.reset();
-        } else {
-            MAKER = new MazeMaker(size, MAKER);
-            PLAYER.setMazeMaker(MAKER);
-        }
-        Screen.NO_MAZE = true;
-        repaint();
     }
 
     public void resetMatrix() {
@@ -162,7 +162,7 @@ public class GamePanel extends JPanel {
             setBackground(new Color(66, 112, 131));
             setPreferredSize(new Dimension(600, 200));
 
-            if (SettingPanel.getDifficulty() == 0) {
+            if (SettingPanel.DIFFICULTY == 0) {
                 add(SOLVER);
             }
             add(Screen.makeButton("Leave Game", l -> {
@@ -235,7 +235,8 @@ public class GamePanel extends JPanel {
                 String points = "Points: " + PLAYER.getPoints();
                 g.drawString(points, (shortHeight ? added : 0) + (interval - getStringWidth(g, points, font))/2, 70);
 
-                String health = "Health Remaining: " + PLAYER.getHealth();
+                int hp = PLAYER.getHealth();
+                String health = "Hearts Remaining: " + (hp / 2) + ((hp & 1) == 1 ? ".5" : "");
                 g.drawString(health, (shortHeight ? added : 0) + (interval - getStringWidth(g, health, font))/2, 90);
 
                 remove(changeButon);
@@ -288,13 +289,13 @@ public class GamePanel extends JPanel {
                     g.setColor(activeColor);
                     g.drawString("Generating maze...", maxW - 160, getHeight() - 70);
                 } else {
-                    String diff = "Difficulty: " + switch (SettingPanel.getDifficulty()) {
+                    String diff = "Difficulty: " + switch (SettingPanel.DIFFICULTY) {
                         case 0 -> "Effortless";
                         case 1 -> "Easy";
                         case 2 -> "Medium";
                         case 3 -> "Hard";
                         case 4 -> "XTREME";
-                        default -> SettingPanel.getDifficulty() + "";
+                        default -> SettingPanel.DIFFICULTY + "";
                     };
                     g.setColor(Color.WHITE);
                     g.drawString(diff, maxW - getStringWidth(g, diff, font), getHeight() - 70);

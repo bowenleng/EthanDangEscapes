@@ -7,8 +7,6 @@ import net.leng.maze.util.MazeMaker;
 import net.leng.maze.screens.Screen;
 
 import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.util.Set;
 
 public class MazePlayer {
     private int x = 0;
@@ -16,7 +14,6 @@ public class MazePlayer {
     private int healthLevel = 0;
     private int points = 0;
     private int facing = MazeMaker.DOWN;
-    private int togglesLeft;
     private int justConsumed = 0; // 0 means nothing, 1 is cheese, 2 is webtoon, 3 is ultra webtoon
     private boolean isCollecting = true;
     private boolean hasWon = false;
@@ -35,26 +32,16 @@ public class MazePlayer {
     }
 
     public void resetHealth() {
-        healthLevel = 14 - (2 * SettingPanel.getDifficulty());
+        healthLevel = 14 - (2 * SettingPanel.DIFFICULTY);
     }
 
     public int getHealth() {
         return healthLevel;
     }
 
-    public void stopCollecting() {
-        isCollecting = false;
-    }
-
-    public void startCollecting() {
-        isCollecting = true;
-    }
-
     public boolean isCollecting() {
         return isCollecting;
     }
-
-    // the player is supposed to win whenever they reach location (size-1, size-1)
 
     public void moveLeft() {
         facing = MazeMaker.LEFT;
@@ -110,7 +97,6 @@ public class MazePlayer {
             g.drawImage(playerImage, x1, y1, interval-2, interval-2, null);
         } else {
             g.setColor(new Color(139, 116, 77));
-            // later draw a sprite thingy here
             g.fillOval(x1, y1, interval-2, interval-2);
         }
     }
@@ -135,25 +121,24 @@ public class MazePlayer {
         };
     }
 
-    public void action(char c) {
+    public void action(char ch) {
         if (!Screen.hasNoMaze() && !hasWon && healthLevel >= 0) {
             justConsumed = 0;
-            switch (c) {
-                case 'w', 'W' -> moveUp();
-                case 'a', 'A' -> moveLeft();
-                case 's', 'S' -> moveDown();
-                case 'd', 'D' -> moveRight();
-                case 'x', 'X' -> {
-                    int difficulty = SettingPanel.getDifficulty();
-                    boolean orgCollecting = isCollecting;
-                    if (difficulty < 2 || !isCollecting || points > 0)
-                        isCollecting = !isCollecting;
-                    if (points > 0 && orgCollecting) {
-                        if (difficulty == 2) points--;
-                        else if (difficulty > 2) points -= 2;
-                    }
+            if (ch == ResourceDirectory.UP_KEY) moveUp();
+            else if (ch == ResourceDirectory.LEFT_KEY) moveLeft();
+            else if (ch == ResourceDirectory.DOWN_KEY) moveDown();
+            else if (ch == ResourceDirectory.RIGHT_KEY) moveRight();
+            else if (ch == ResourceDirectory.COLLECT_KEY) {
+                int difficulty = SettingPanel.DIFFICULTY;
+                boolean orgCollecting = isCollecting;
+                if (difficulty < 2 || !isCollecting || points > 0)
+                    isCollecting = !isCollecting;
+                if (points > 0 && orgCollecting) {
+                    if (difficulty == 2) points--;
+                    else if (difficulty > 2) points -= 2;
                 }
             }
+
             if (isCollecting) {
                 if (mazeMaker.hasGoodStory(x, y)) {
                     points += 5;

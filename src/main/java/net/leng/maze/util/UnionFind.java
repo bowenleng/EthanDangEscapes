@@ -1,8 +1,7 @@
 package net.leng.maze.util;
 
 public class UnionFind {
-    // needed for Kruskal's algo
-    private int[] parent;
+    private final int[] parent;
     private int cnt;
     public UnionFind(int size) {
         parent = new int[size];

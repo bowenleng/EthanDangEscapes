@@ -81,8 +81,6 @@ public class OptionPanel extends JPanel {
             for (int j = 0; j < sliderVal; j++) {
                 int y1 = interval * j + (shortHeight ? 0 : added);
                 int y2 = y1 + interval;
-                // make the maze color go to the mazemaker as well...
-                //g.setColor(mergeWithDist(i, j));
                 g.drawLine(x1, y1, x1, y2);
                 g.drawLine(x2, y1, x2, y2);
                 g.drawLine(x1, y1, x2, y1);

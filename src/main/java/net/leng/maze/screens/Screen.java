@@ -28,8 +28,8 @@ public class Screen extends JFrame {
     private final JPanel guideScreen;
     private Screen() {
         super("Ethan Dang Escapes!");
-        setPreferredSize(new Dimension(900, 900));
         setMinimumSize(new Dimension(900, 820));
+        setPreferredSize(new Dimension(900, 900));
         setVisible(true);
 
         if (ResourceDirectory.FAVICON != null) setIconImage(ResourceDirectory.FAVICON);
@@ -48,10 +48,17 @@ public class Screen extends JFrame {
             if (GamePanel.PLAYER.finishedMaze()) CAN_FOCUS = false;
         });
         timer.start();
+        ResourceDirectory.loadSettings();
+    }
+
+    @Override
+    public void dispose() {
+        ResourceDirectory.saveSettings();
+        super.dispose();
     }
 
     public void difficultyChange() {
-        if (SettingPanel.getDifficulty() > 0) {
+        if (SettingPanel.DIFFICULTY > 0) {
             bottomBar.removeButton();
         } else {
             bottomBar.addButton();
@@ -72,12 +79,6 @@ public class Screen extends JFrame {
 
         }
         validate();
-    }
-
-    public void redrawGrid(int size) {
-        if (getContentPane().getComponent(0) instanceof GamePanel drawing) {
-            drawing.redrawMatrix(size);
-        }
     }
 
     public void resetGrid() {
