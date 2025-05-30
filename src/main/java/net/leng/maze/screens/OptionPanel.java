@@ -18,8 +18,6 @@ public class OptionPanel extends JPanel {
     // 4 is bin tree
     static int mostRecentOption = 0;
     static final JSlider slider = makeSlider();
-
-    private boolean canFocus = true;
     OptionPanel(Screen frame) {
         setBackground(Color.BLACK);
         // algorithms
@@ -27,17 +25,17 @@ public class OptionPanel extends JPanel {
         box.addPopupMenuListener(new PopupMenuListener() {
             @Override
             public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
-                canFocus = false;
+                SettingPanel.CAN_FOCUS = false;
             }
 
             @Override
             public void popupMenuWillBecomeInvisible(PopupMenuEvent e) {
-                canFocus = true;
+                SettingPanel.CAN_FOCUS = true;
             }
 
             @Override
             public void popupMenuCanceled(PopupMenuEvent e) {
-                canFocus = true;
+                SettingPanel.CAN_FOCUS = true;
             }
         });
         box.addActionListener(l -> {
@@ -95,7 +93,7 @@ public class OptionPanel extends JPanel {
         slider.setBackground(new Color(215, 245, 255));
         slider.setToolTipText("Maze Size");
         slider.setMinimum(5);
-        slider.setMaximum(25);
+        slider.setMaximum(45);
         slider.setValue(5);
         return slider;
     }
@@ -106,15 +104,15 @@ public class OptionPanel extends JPanel {
         int sliderVal = slider.getValue();
 
         // maze drawer start
-        int width = getWidth();
-        int height = getHeight() - 200;
+        int width = getWidth() - 225;
+        int height = getHeight();
         int interval = Math.min(width, height) / sliderVal;
         boolean shortHeight = height < width;
         int trimmedSize = interval * sliderVal;
         int added = (Math.max(height, width) - trimmedSize) / 2;
         g.setColor(Color.DARK_GRAY);
         for (int i = 0; i < sliderVal; i++) {
-            int x1 = interval * i + (shortHeight ? added : 0);
+            int x1 = interval * i + (shortHeight ? added : 0) + 225;
             int x2 = x1 + interval;
             for (int j = 0; j < sliderVal; j++) {
                 int y1 = interval * j + (shortHeight ? 0 : added);
@@ -135,10 +133,10 @@ public class OptionPanel extends JPanel {
             case 4 -> "Binary Tree";
             default -> "None";
         };
-        g.drawString("Maze Size: " + sliderVal + "x" + sliderVal, (shortHeight ? added : 0), getHeight() - 180);
-        g.drawString("Maze Type: " + mazeType, (shortHeight ? added : 0), getHeight() - 150);
+        g.drawString("Maze Size: " + sliderVal + "x" + sliderVal, (shortHeight ? added : 0), 40);
+        g.drawString("Maze Type: " + mazeType, (shortHeight ? added : 0), 70);
 
-        if (canFocus) {
+        if (SettingPanel.CAN_FOCUS) {
             requestFocus();
             requestFocusInWindow();
         }

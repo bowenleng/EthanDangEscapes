@@ -17,8 +17,6 @@ public class GamePanel extends JPanel {
     static long endTime;
     static boolean NO_MAZE = true;
     public static boolean AUTO_SOLVE = false;
-
-    private boolean canFocus;
     GamePanel(Screen frame) {
         setBackground(Color.BLACK);
         setPreferredSize(new Dimension(720, 720));
@@ -86,13 +84,13 @@ public class GamePanel extends JPanel {
         g.setFont(font);
         if (PLAYER.hasWon()) {
             g.drawImage(ResourceDirectory.ETHAN_WON, (shortHeight ? added : 0), (shortHeight ? 0 : added), interval, interval, null);
-            g.setColor(BottomPanel.activeColor);
+            g.setColor(SidePanel.activeColor);
             String playerStat = "YOU WON!";
             g.drawString(playerStat, (shortHeight ? added : 0) + (interval - getStringWidth(g, playerStat, font))/2, 100);
-            canFocus = false;
+            SettingPanel.CAN_FOCUS = false;
         } else if (PLAYER.hasLost()) {
             g.drawImage(ResourceDirectory.ETHAN_LOST, (shortHeight ? added : 0), (shortHeight ? 0 : added), interval, interval, null);
-            g.setColor(BottomPanel.badColor);
+            g.setColor(SidePanel.badColor);
             String playerStat = "YOU LOST!";
             g.drawString(playerStat, (shortHeight ? added : 0) + (interval - getStringWidth(g, playerStat, font))/2, 100);
         } else {
@@ -111,7 +109,7 @@ public class GamePanel extends JPanel {
                 PLAYER.autoMove();
                 PLAYER.drawPlayer(g, getWidth(), getHeight());
             } else if (!NO_MAZE) {
-                if (canFocus) focus();
+                if (SettingPanel.CAN_FOCUS) focus();
                 PLAYER.drawPlayer(g, getWidth(), getHeight());
             }
         }
@@ -136,13 +134,13 @@ public class GamePanel extends JPanel {
             }
             OptionPanel.option = 0;
             NO_MAZE = false;
-            canFocus = true;
+            SettingPanel.CAN_FOCUS = true;
             MAKER.generateItems();
             startTime = System.currentTimeMillis();
         } else if (sup.getAsBoolean()) {
             OptionPanel.option = 0;
             NO_MAZE = false;
-            canFocus = true;
+            SettingPanel.CAN_FOCUS = true;
             MAKER.generateItems();
             startTime = System.currentTimeMillis();
         }
@@ -152,7 +150,7 @@ public class GamePanel extends JPanel {
         return NO_MAZE;
     }
 
-    static class BottomPanel extends JPanel {
+    static class SidePanel extends JPanel {
         final static Color activeColor = new Color(135, 255, 114);
         final static Color idleColor = new Color(153, 208, 232);
         final static Color badColor = new Color(255, 84, 84);
@@ -169,9 +167,9 @@ public class GamePanel extends JPanel {
             if (!NO_MAZE) AUTO_SOLVE = true;
         });
 
-        BottomPanel(Screen frame) {
+        SidePanel(Screen frame) {
             setBackground(new Color(66, 112, 131));
-            setPreferredSize(new Dimension(600, 200));
+            setPreferredSize(new Dimension(225, 820));
 
             if (SettingPanel.DIFFICULTY == 0) {
                 add(SOLVER);
@@ -257,14 +255,13 @@ public class GamePanel extends JPanel {
                 if (!NO_MAZE) {
                     float health = PLAYER.getHealth() / 2f;
                     for (int i = 0; i < health; i++) {
-                        g.drawImage(i + 1 > health ? ResourceDirectory.HALF_HEART : ResourceDirectory.HEART, 10 + (20 * i), 10, 18, 18, null);
+                        g.drawImage(i + 1 > health ? ResourceDirectory.HALF_HEART : ResourceDirectory.HEART, 10 + (20 * i), 75, 18, 18, null);
                     }
                 }
 
                 // draw the messaging
                 boolean isRunning = OptionPanel.option != 0;
                 int val = OptionPanel.slider.getValue();
-                int maxW = getWidth() - 10;
                 String mazeType = switch (OptionPanel.mostRecentOption) {
                     case 1 -> "DFS";
                     case 2 -> "Kruskal's";
@@ -272,17 +269,12 @@ public class GamePanel extends JPanel {
                     case 4 -> "Binary Tree";
                     default -> "None";
                 };
-                String mazeGen = "Maze Type: " + mazeType;
-                g.drawString(mazeGen, maxW - getStringWidth(g, mazeGen, font), getHeight() - 40);
-                String sizeStr = "Size: " + val + "x" + val;
-                g.drawString(sizeStr, maxW - getStringWidth(g, sizeStr, font), getHeight() - 10);
+                g.drawString("Maze Type: " + mazeType, 10, getHeight() - 40);
+                g.drawString("Size: " + val + "x" + val, 10, getHeight() - 10);
                 if (!NO_MAZE) {
-                    String locStr = "Location: (" + PLAYER.getX() + ", " + PLAYER.getY() + ")";
-                    g.drawString(locStr, 10, getHeight() - 10);
+                    g.drawString("Location: (" + PLAYER.getX() + ", " + PLAYER.getY() + ")", 10, getHeight() - 130);
 
-                    String ptStr = "Points: ";
-                    g.drawString(ptStr, 10, getHeight() - 40);
-                    g.drawString("" + Math.max(PLAYER.getPoints(), 0), 10 + getStringWidth(g, ptStr, font), getHeight() - 40);
+                    g.drawString("Points: " + Math.max(PLAYER.getPoints(), 0), 10, getHeight() - 160);
 
                     if (PLAYER.hasWon()) {
                         g.setColor(activeColor);
@@ -291,14 +283,13 @@ public class GamePanel extends JPanel {
                         g.setColor(badColor);
                         g.drawString("You have lost", 10, getHeight() - 70);
                     } else {
-                        String status = PLAYER.isCollecting() ? "Collecting" : "Not collecting";
                         g.setColor(PLAYER.isCollecting() ? activeColor : idleColor);
-                        g.drawString(status, 10, getHeight() - 70);
+                        g.drawString(PLAYER.isCollecting() ? "Collecting" : "Not collecting", 10, getHeight() - 100);
                     }
                 }
                 if (!SettingPanel.FAST_FORWARD && isRunning) {
                     g.setColor(activeColor);
-                    g.drawString("Generating maze...", maxW - 160, getHeight() - 70);
+                    g.drawString("Generating maze...", 10, getHeight() - 70);
                 } else {
                     String diff = "Difficulty: " + switch (SettingPanel.DIFFICULTY) {
                         case 0 -> "Effortless";
@@ -309,7 +300,7 @@ public class GamePanel extends JPanel {
                         default -> SettingPanel.DIFFICULTY + "";
                     };
                     g.setColor(Color.WHITE);
-                    g.drawString(diff, maxW - getStringWidth(g, diff, font), getHeight() - 70);
+                    g.drawString(diff, 10, getHeight() - 70);
                 }
             }
         }

@@ -15,7 +15,7 @@ public class StartScreen extends JPanel {
         super();
         setBackground(new Color(77, 100, 115));
         setLayout(null);
-        createButton = makeButton("Create Maze", Screen.OPTIONS, frame);
+        createButton = makeButton("Play", Screen.OPTIONS, frame);
         guideButton = makeButton("Guide", Screen.GUIDE, frame);
         settingButton = makeButton("Settings", Screen.SETTINGS, frame);
         exitButton = Screen.makeButton("Exit Game", l -> {

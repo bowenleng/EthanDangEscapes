@@ -3,6 +3,8 @@ package net.leng.maze.screens;
 import net.leng.maze.util.ResourceDirectory;
 
 import javax.swing.*;
+import javax.swing.event.PopupMenuEvent;
+import javax.swing.event.PopupMenuListener;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
@@ -12,6 +14,7 @@ import java.awt.event.MouseListener;
 public class SettingPanel extends JPanel {
     public static boolean FAST_FORWARD = false;
     public static int DIFFICULTY = 2;
+    public static boolean CAN_FOCUS = false;
 
     private int keyLabelAccessed = -1;
 
@@ -29,7 +32,23 @@ public class SettingPanel extends JPanel {
         add(Screen.makeButton("Go Back", l -> frame.openScreen(Screen.START)));
 
         JComboBox<String> box = Screen.createComboBox(new String[]{"Effortless", "Easy", "Medium", "Hard", "XTREME"});
-        box.setSelectedIndex(2);
+        box.addPopupMenuListener(new PopupMenuListener() {
+            @Override
+            public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
+                CAN_FOCUS = false;
+            }
+
+            @Override
+            public void popupMenuWillBecomeInvisible(PopupMenuEvent e) {
+                CAN_FOCUS = true;
+            }
+
+            @Override
+            public void popupMenuCanceled(PopupMenuEvent e) {
+                CAN_FOCUS = true;
+            }
+        });
+        box.setSelectedIndex(DIFFICULTY);
         box.addActionListener(l -> {
             DIFFICULTY = box.getSelectedIndex();
             frame.difficultyChange();
@@ -200,7 +219,9 @@ public class SettingPanel extends JPanel {
         g.drawString("Down Key: " + ResourceDirectory.keycodeToName(ResourceDirectory.DOWN_KEY), col1 + 4, row2 + 18);
         g.drawString("Right Key: " + ResourceDirectory.keycodeToName(ResourceDirectory.RIGHT_KEY), col2 + 4, row2 + 18);
         g.drawString("Collect Key: " + ResourceDirectory.keycodeToName(ResourceDirectory.COLLECT_KEY), col1 + 4, row3 + 18);
-        requestFocus();
-        requestFocusInWindow();
+        if (CAN_FOCUS) {
+            requestFocus();
+            requestFocusInWindow();
+        }
     }
 }

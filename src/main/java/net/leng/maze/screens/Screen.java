@@ -18,7 +18,7 @@ public class Screen extends JFrame {
 
     private final JPanel drawer;
     private final JPanel starter;
-    private final GamePanel.BottomPanel bottomBar;
+    private final GamePanel.SidePanel bottomBar;
     private final JPanel settingScreen;
     private final JPanel optionScreen;
     private final JPanel guideScreen;
@@ -32,7 +32,7 @@ public class Screen extends JFrame {
         ResourceDirectory.loadSettings();
         drawer = new GamePanel(this);
         starter = new StartScreen(this);
-        bottomBar = new GamePanel.BottomPanel(this);
+        bottomBar = new GamePanel.SidePanel(this);
         settingScreen = new SettingPanel(this);
         optionScreen = new OptionPanel(this);
         guideScreen = new GuidePanel(this);
@@ -67,12 +67,13 @@ public class Screen extends JFrame {
             case OPTIONS -> getContentPane().add(optionScreen);
             case GAME -> {
                 getContentPane().add(drawer, BorderLayout.CENTER);
-                getContentPane().add(bottomBar, BorderLayout.SOUTH);
+                getContentPane().add(bottomBar, BorderLayout.WEST);
             }
             case GUIDE -> getContentPane().add(guideScreen);
             default -> getContentPane().add(starter);
 
         }
+        SettingPanel.CAN_FOCUS = true;
         validate();
     }
 
